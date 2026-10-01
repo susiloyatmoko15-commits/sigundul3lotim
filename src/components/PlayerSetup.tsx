@@ -13,7 +13,7 @@ export const PlayerSetup: React.FC<Props> = ({ onStartGame, onBack }) => {
   const [playerName, setPlayerName] = useState('');
   const [className, setClassName] = useState('Kelas 5A');
   const [memberInput, setMemberInput] = useState('');
-  const [members, setMembers] = useState<string[]>(['Andi', 'Budi', 'Citra']);
+  const [members, setMembers] = useState<string[]>([]);
 
   const handleAddMember = () => {
     if (!memberInput.trim()) return;
@@ -68,7 +68,7 @@ export const PlayerSetup: React.FC<Props> = ({ onStartGame, onBack }) => {
           Siapkan Tim Detektif Literasi!
         </h2>
         <p className="text-xs sm:text-sm text-slate-600 mt-1">
-          Masukkan identitas tim atau nama siswa sebelum menjelajahi 5 babak cerita bersambung di sekolah.
+          Masukkan identitas tim atau nama siswa sebelum menjelajahi 5 pos petualangan di sekolah.
         </p>
       </div>
 
@@ -84,7 +84,6 @@ export const PlayerSetup: React.FC<Props> = ({ onStartGame, onBack }) => {
               onClick={() => {
                 sounds.playClick();
                 setMode('group');
-                if (!playerName) setPlayerName('Kelompok Garuda');
               }}
               className={`p-3 rounded-2xl border-2 font-bold flex items-center justify-center gap-2 text-sm transition-all ${
                 mode === 'group'
@@ -99,7 +98,6 @@ export const PlayerSetup: React.FC<Props> = ({ onStartGame, onBack }) => {
               onClick={() => {
                 sounds.playClick();
                 setMode('individual');
-                if (playerName === 'Kelompok Garuda') setPlayerName('');
               }}
               className={`p-3 rounded-2xl border-2 font-bold flex items-center justify-center gap-2 text-sm transition-all ${
                 mode === 'individual'

@@ -179,7 +179,7 @@ export const TreasureVictoryView: React.FC<Props> = ({
             <Award className="w-8 h-8 text-amber-600" />
             <div>
               <div className="text-xs font-black uppercase text-amber-700 tracking-wider">
-                SEKOLAH DASAR NUSANTARA
+                SD NEGERI 3 LOLOAN TIMUR
               </div>
               <div className="text-lg sm:text-xl font-black font-display text-amber-950">
                 PIAGAM PENGHARGAAN DETEKTIF LITERASI
@@ -206,7 +206,7 @@ export const TreasureVictoryView: React.FC<Props> = ({
             {summary.className} {summary.members && summary.members.length > 0 ? `• Anggota: ${summary.members.join(', ')}` : ''}
           </p>
           <p className="text-xs sm:text-sm text-slate-600 max-w-xl mx-auto pt-1 leading-relaxed">
-            Atas keberhasilannya menyelesaikan 5 Babak Cerita Bersambung &ldquo;Misteri Pusaka Aksara Nusantara&rdquo; dan menyusun tugas akhir ringkasan alur cerita dengan ketelitian dan budi pekerti yang luhur.
+            Atas keberhasilannya menyelesaikan 5 Pos Petualangan Sains &amp; Literasi &ldquo;Perkembangbiakan pada Tumbuhan&rdquo; dengan ketelitian, kerja sama, dan semangat belajar yang tinggi.
           </p>
         </div>
 
@@ -219,7 +219,7 @@ export const TreasureVictoryView: React.FC<Props> = ({
             </span>
           </div>
           <p className="text-xs sm:text-sm leading-relaxed text-slate-700 font-medium">
-            Jangan lupa tunjukkan dan kumpulkan <strong>Buku Catatan Manualmu</strong> yang berisi rangkuman poin penting dari <strong>Pos 1 (Gudang Sekolah), Pos 2 (Bawah Pohon Jambu), Pos 3 (Bawah Pohon Cempaka), Pos 4 (Lorong Parkir), dan Pos 5 (Di Kelas)</strong> kepada Bapak/Ibu Guru!
+            Jangan lupa tunjukkan dan kumpulkan <strong>Buku Catatan Manualmu</strong> yang berisi rangkuman poin penting materi dari <strong>Pos 1 hingga Pos 5</strong> kepada Bapak/Ibu Guru!
           </p>
         </div>
 

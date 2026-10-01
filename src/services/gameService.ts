@@ -18,7 +18,7 @@ const LOCAL_SESSION_KEY = 'sigundul_tumbuhan_v4_session';
 const LOCAL_SETTINGS_KEY = 'sigundul_tumbuhan_v4_settings';
 const LOCAL_LOCATIONS_KEY = 'sigundul_tumbuhan_v4_locations';
 const LOCAL_QUESTIONS_KEY = 'sigundul_tumbuhan_v4_questions';
-const LOCAL_LEADERBOARD_KEY = 'sigundul_tumbuhan_v4_leaderboard';
+const LOCAL_LEADERBOARD_KEY = 'sigundul_tumbuhan_v5_leaderboard';
 
 // Helper to shuffle array
 function shuffleArray<T>(array: T[]): T[] {

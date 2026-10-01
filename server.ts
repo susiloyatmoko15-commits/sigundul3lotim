@@ -27,54 +27,7 @@ let settings: GameSettings = { ...DEFAULT_SETTINGS };
 let questions: Question[] = [...DEFAULT_QUESTIONS];
 const activeGames: Map<string, GameSession> = new Map();
 
-let leaderboard: LeaderboardEntry[] = [
-  {
-    id: 'lb_demo_1',
-    gameId: 'GAME-2026-1024',
-    playerName: 'Tim Tunas Hijau',
-    mode: 'group',
-    className: 'Kelas 6A',
-    members: ['Putu', 'Made', 'Komang', 'Ketut'],
-    score: 2450,
-    completedStations: 5,
-    correctCount: 20,
-    totalQuestions: 20,
-    durationSeconds: 1540,
-    accuracy: 98,
-    badge: '🌿 ILMUWAN TUMBUHAN UTAMA',
-    completedAt: new Date(Date.now() - 3600000).toISOString(),
-    storyRetelling: {
-      studentText: 'Di Pos 1 Gudang Sekolah kami mencatat perkembangbiakan generatif menggunakan bunga (benang sari sebagai alat kelamin jantan dan putik sebagai betina). Di Pos 2 Bawah Pohon Jambu kami mempelajari vegetatif buatan seperti mencangkok tanaman berkambium, stek, okulasi, dan merunduk. Di Pos 3 Bawah Pohon Cempaka kami mencatat 4 jenis penyerbukan (sendiri, tetangga, silang, bastar) dan perantaranya. Di Pos 4 Lorong Parkir kami mempelajari vegetatif alami seperti tunas, umbi, rhizoma, geragih, dan spora. Terakhir di Pos 5 di Kelas kami mempelajari penyebaran biji serta pelestarian tumbuhan in-situ dan ex-situ.',
-      wordCount: 89,
-      submittedAt: new Date(Date.now() - 3600000).toISOString(),
-      teacherRating: 5,
-      teacherFeedback: 'Catatan materi dari Pos 1 hingga Pos 5 sangat lengkap, rapi, dan akurat!',
-    },
-  },
-  {
-    id: 'lb_demo_2',
-    gameId: 'GAME-2026-1033',
-    playerName: 'Kelompok Cempaka Wangi',
-    mode: 'group',
-    className: 'Kelas 5A',
-    members: ['Ayu', 'Bagus', 'Citra', 'Dewa'],
-    score: 2320,
-    completedStations: 5,
-    correctCount: 19,
-    totalQuestions: 20,
-    durationSeconds: 1820,
-    accuracy: 94,
-    badge: '🎯 PENELITI CERMAT',
-    completedAt: new Date(Date.now() - 7200000).toISOString(),
-    storyRetelling: {
-      studentText: 'Tumbuhan berkembang biak secara generatif melalui penyerbukan dan pembuahan pada bunga, serta secara vegetatif tanpa perkawinan. Vegetatif buatan dibantu manusia seperti mencangkok pohon jambu, stek singkong, dan okulasi. Vegetatif alami terjadi sendiri seperti tunas pisang, tunas adventif cocor bebek, umbi lapis bawang, rhizoma jahe, geragih stroberi, dan spora paku.',
-      wordCount: 51,
-      submittedAt: new Date(Date.now() - 7200000).toISOString(),
-      teacherRating: 5,
-      teacherFeedback: 'Ringkasan catatan yang sangat padat dan jelas membedakan generatif serta vegetatif!',
-    },
-  },
-];
+let leaderboard: LeaderboardEntry[] = [];
 
 // Helper to shuffle array
 function shuffleArray<T>(array: T[]): T[] {

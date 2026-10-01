@@ -139,7 +139,7 @@ export const StoryRetellingView: React.FC<StoryRetellingViewProps> = ({
                   Pos {idx + 1}
                 </div>
                 <div>
-                  <div className="font-bold text-amber-950">{loc.name} — {loc.story.title}</div>
+                  <div className="font-bold text-amber-950">{loc.story.title}</div>
                   <div className="text-slate-600 mt-0.5 leading-relaxed">
                     {loc.story.summaryClue || loc.story.subtitle}
                   </div>
@@ -157,13 +157,6 @@ export const StoryRetellingView: React.FC<StoryRetellingViewProps> = ({
             <Lightbulb className="w-5 h-5 text-amber-600 shrink-0" />
             Panduan Rangkuman Catatan Materi
           </div>
-          <button
-            type="button"
-            onClick={handleInsertScaffold}
-            className="text-xs font-bold text-amber-800 hover:text-amber-950 underline flex items-center gap-1 cursor-pointer"
-          >
-            <span>💡 Gabungkan Catatan Pos / Contoh Rangkuman</span>
-          </button>
         </div>
 
         <div className="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs">

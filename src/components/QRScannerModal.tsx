@@ -351,14 +351,14 @@ export const QRScannerModal: React.FC<Props> = ({
                     type="text"
                     value={manualCode}
                     onChange={(e) => setManualCode(e.target.value.toUpperCase())}
-                    placeholder="Contoh: LITERASI-POS-1"
+                    placeholder="Ketik kode yang tertera di kartu QR..."
                     className="w-full px-4 py-3 bg-amber-50/60 border-2 border-amber-300 rounded-xl text-slate-900 font-mono font-bold tracking-wider placeholder-slate-400 focus:outline-hidden focus:border-amber-500 focus:bg-white text-base uppercase"
                     autoFocus
                   />
                   <Scan className="w-5 h-5 text-amber-500 absolute right-3 top-3.5" />
                 </div>
                 <p className="text-[11px] text-slate-500 mt-1.5">
-                  Kode tertera tepat di bawah kotak QR Code pada kartu pos sekolah.
+                  Kode tertera tepat di bawah kotak QR Code pada kartu pos di lokasi.
                 </p>
               </div>
 
@@ -377,35 +377,6 @@ export const QRScannerModal: React.FC<Props> = ({
               </button>
             </form>
           )}
-
-          {/* Quick Test Bar (Super helpful during classroom preview/evaluation) */}
-          <div className="w-full mt-4 pt-4 border-t border-slate-200">
-            <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-1">
-              <span>🧪 Uji Coba Cepat (Klik kode pos yang dituju):</span>
-            </div>
-            <div className="flex flex-wrap gap-1.5">
-              {[
-                { label: 'Babak 1', code: 'LITERASI-POS-1' },
-                { label: 'Babak 2', code: 'LITERASI-POS-2' },
-                { label: 'Babak 3', code: 'LITERASI-POS-3' },
-                { label: 'Babak 4', code: 'LITERASI-POS-4' },
-                { label: 'Babak 5 (Final)', code: 'LITERASI-POS-5' },
-              ].map((testItem) => (
-                <button
-                  key={testItem.label}
-                  type="button"
-                  onClick={() => {
-                    sounds.playClick();
-                    setManualCode(testItem.code);
-                    handleVerifyCode(testItem.code);
-                  }}
-                  className="text-xs bg-slate-100 hover:bg-amber-100 text-slate-700 hover:text-amber-800 border border-slate-300 hover:border-amber-300 font-mono px-2 py-1 rounded-md transition-colors cursor-pointer"
-                >
-                  {testItem.label}
-                </button>
-              ))}
-            </div>
-          </div>
         </div>
       </div>
     </div>
