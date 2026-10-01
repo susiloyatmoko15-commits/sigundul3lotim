@@ -14,13 +14,11 @@ export const SplashScreen: React.FC<Props> = ({ onEnter }) => {
     setIsExiting(true);
     sounds.playSuccess();
 
-    // Start background music on first user gesture
-    if (!sounds.isBgmPlaying) {
-      try {
-        sounds.startBgm();
-      } catch {
-        // ignore audio policy restrictions
-      }
+    // Ensure built-in background music plays immediately on first screen tap
+    try {
+      sounds.startBgm();
+    } catch {
+      // ignore audio policy restrictions
     }
 
     setTimeout(() => {
