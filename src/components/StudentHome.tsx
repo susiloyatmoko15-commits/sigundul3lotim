@@ -46,7 +46,7 @@ export const StudentHome: React.FC<Props> = ({
         </h2>
 
         <p className="text-amber-100 text-xs sm:text-base font-semibold max-w-md mx-auto mt-2.5 leading-relaxed">
-          Jelajahi 5 Pos di lingkungan sekolah (<strong>Gudang, Pohon Jambu, Pohon Cempaka, Lorong Parkir, hingga Kelas</strong>), baca artikel materinya, <strong>catat hal-hal penting</strong>, lalu taklukkan soal di setiap pos!
+          Pecahkan deskripsi petunjuk lokasi untuk menemukan <strong>5 Pos Rahasia</strong> di lingkungan sekolah, baca artikel materinya, <strong>catat hal-hal penting di buku tulismu</strong>, lalu taklukkan soal di setiap pos!
         </p>
 
         {/* Features highlight summary */}
@@ -196,10 +196,10 @@ export const StudentHome: React.FC<Props> = ({
       {/* Educational Topic Preview Banner */}
       <div className="bg-white/90 rounded-2xl p-3.5 sm:p-4 border border-amber-200 text-xs text-slate-600 space-y-1.5">
         <span className="font-extrabold text-amber-900 block uppercase text-[11px] sm:text-xs">
-          🌿 Rute 5 Pos Materi Perkembangbiakan Tumbuhan:
+          🌿 Materi 5 Pos Perkembangbiakan Tumbuhan:
         </span>
         <p className="text-[11px] sm:text-xs font-semibold text-slate-700 leading-relaxed">
-          <strong>Pos 1 (Gudang Sekolah):</strong> Generatif &amp; Bunga &bull; <strong>Pos 2 (Bawah Pohon Jambu):</strong> Vegetatif Buatan &bull; <strong>Pos 3 (Bawah Pohon Cempaka):</strong> Macam Penyerbukan &bull; <strong>Pos 4 (Lorong Parkir):</strong> Vegetatif Alami &bull; <strong>Pos 5 (Di Kelas):</strong> Penyebaran Biji &amp; Pelestarian
+          <strong>Pos 1:</strong> Generatif &amp; Bunga &bull; <strong>Pos 2:</strong> Vegetatif Buatan &bull; <strong>Pos 3:</strong> Macam Penyerbukan &bull; <strong>Pos 4:</strong> Vegetatif Alami &bull; <strong>Pos 5:</strong> Penyebaran Biji &amp; Pelestarian
         </p>
       </div>
     </div>

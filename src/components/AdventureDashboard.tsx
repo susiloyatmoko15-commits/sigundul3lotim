@@ -264,18 +264,12 @@ export const AdventureDashboard: React.FC<Props> = ({
               )}
             </div>
 
-            {/* Clue/Riddle Box */}
+            {/* Clue/Riddle Box (Only description shown, no specific location name) */}
             <div className="bg-white/95 text-slate-800 rounded-2xl p-3.5 sm:p-4 shadow-inner space-y-2 border-2 border-amber-300">
               <div className="flex items-center gap-1.5 text-xs font-bold text-amber-800 uppercase tracking-wider">
                 <Compass className="w-4 h-4 text-amber-600 shrink-0" />
-                <span>Petunjuk Lokasi (Teka-Teki):</span>
+                <span>Deskripsi Petunjuk Lokasi {currentStation.code}:</span>
               </div>
-
-              {currentStation.name && (
-                <div className="text-sm sm:text-base font-extrabold text-amber-950">
-                  📍 Lokasi Pos: <span className="underline decoration-amber-400">{currentStation.name}</span>
-                </div>
-              )}
 
               <p className="text-xs sm:text-sm font-semibold text-slate-800 leading-relaxed italic bg-amber-50/70 p-3 rounded-xl border border-amber-200">
                 &ldquo;{currentStation.hint}&rdquo;
@@ -284,7 +278,7 @@ export const AdventureDashboard: React.FC<Props> = ({
               <div className="text-[11px] sm:text-xs text-slate-500 flex items-start gap-1.5 pt-0.5">
                 <AlertCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
                 <span>
-                  Cari kartu QR Code babak cerita ini di lokasi sekolah, lalu tekan tombol scan untuk membuka teks cerita!
+                  Temukan lokasi yang sesuai dengan deskripsi di atas, lalu scan kartu QR Code di tempat tersebut!
                 </span>
               </div>
             </div>

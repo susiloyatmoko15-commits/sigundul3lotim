@@ -29,7 +29,7 @@ export const FinalPosIntroModal: React.FC<Props> = ({
         </div>
 
         <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-yellow-400/20 border border-yellow-400/40 text-yellow-300 text-xs font-black uppercase tracking-widest mb-2">
-          <Sparkles className="w-3.5 h-3.5" /> BABAK 5 (FINAL) &bull; AULA PUSAKA AKSARA
+          <Sparkles className="w-3.5 h-3.5" /> POS 5 (FINAL) &bull; PUNCAK PETUALANGAN ILMU
         </div>
 
         <h2 className="text-3xl sm:text-4xl font-black font-display text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 via-yellow-400 to-amber-300 mb-2">
@@ -37,21 +37,15 @@ export const FinalPosIntroModal: React.FC<Props> = ({
         </h2>
 
         <p className="text-amber-200 text-sm sm:text-base font-medium mb-5">
-          Kamu telah melintasi 4 babak cerita! Temukan QR Code peti pusaka di aula sekolah, tuntaskan babak final, dan siapkan dirimu untuk <strong>Tugas Akhir Menceritakan Kembali Alur Kisah</strong>!
+          Kamu telah menaklukkan 4 pos sebelumnya! Pecahkan deskripsi lokasi terakhir di bawah ini, temukan QR Code Pos 5, dan tuntaskan misi terakhirmu!
         </p>
 
-        {/* Final Clue Parchment */}
+        {/* Final Clue Parchment (Description only) */}
         <div className="bg-amber-100/10 border-2 border-yellow-500/40 rounded-2xl p-4 text-left backdrop-blur-xs mb-6">
           <div className="flex items-center gap-2 mb-2 text-yellow-400 font-bold text-xs uppercase tracking-wider">
             <MapPin className="w-4 h-4 text-yellow-400" />
-            <span>Petunjuk Lokasi Babak 5 (Peti Pusaka):</span>
+            <span>Deskripsi Petunjuk Lokasi Pos 5 (Final):</span>
           </div>
-
-          {finalLocationName && (
-            <div className="text-sm font-extrabold text-yellow-300 mb-1">
-              📍 {finalLocationName}
-            </div>
-          )}
 
           <div className="bg-black/30 p-3.5 rounded-xl border border-yellow-500/30 text-amber-100 text-sm font-medium leading-relaxed italic">
             &ldquo;{finalHint}&rdquo;

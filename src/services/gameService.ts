@@ -14,11 +14,11 @@ import {
   DEFAULT_QUESTIONS,
 } from '../data/defaultData';
 
-const LOCAL_SESSION_KEY = 'sigundul_tumbuhan_v3_session';
-const LOCAL_SETTINGS_KEY = 'sigundul_tumbuhan_v3_settings';
-const LOCAL_LOCATIONS_KEY = 'sigundul_tumbuhan_v3_locations';
-const LOCAL_QUESTIONS_KEY = 'sigundul_tumbuhan_v3_questions';
-const LOCAL_LEADERBOARD_KEY = 'sigundul_tumbuhan_v3_leaderboard';
+const LOCAL_SESSION_KEY = 'sigundul_tumbuhan_v4_session';
+const LOCAL_SETTINGS_KEY = 'sigundul_tumbuhan_v4_settings';
+const LOCAL_LOCATIONS_KEY = 'sigundul_tumbuhan_v4_locations';
+const LOCAL_QUESTIONS_KEY = 'sigundul_tumbuhan_v4_questions';
+const LOCAL_LEADERBOARD_KEY = 'sigundul_tumbuhan_v4_leaderboard';
 
 // Helper to shuffle array
 function shuffleArray<T>(array: T[]): T[] {
@@ -352,8 +352,7 @@ class GameService {
 
       return {
         matched: true,
-        message: `🎉 KODE DITEMUKAN!\nSelamat! Kamu tiba di ${targetLoc?.name || 'Pos Cerita'}.\nBacalah babak cerita dengan seksama dan selesaikan tantangan literasi!`,
-        stationName: targetLoc?.name,
+        message: `🎉 KODE DITEMUKAN!\nSelamat! Kamu berhasil menemukan ${targetLoc?.code || 'Pos ini'}.\nBacalah artikel materi dengan seksama, catat di buku tulismu, lalu selesaikan soal!`,
         story: targetLoc?.story,
         questions: stationQ,
       };
@@ -523,8 +522,7 @@ class GameService {
       posProg.failed = true;
       currentSession.status = 'failed';
       currentSession.failedPosCode = currentLocConfig?.code || `POS ${currentSession.currentPosIndex + 1}`;
-      currentSession.failedPosName = currentLocConfig?.name || '';
-      currentSession.failedReason = `Gagal menaklukkan soal di ${currentSession.failedPosCode}${currentSession.failedPosName ? ` (${currentSession.failedPosName})` : ''} setelah ${settings.maxAttempts} kali percobaan.`;
+      currentSession.failedReason = `Gagal menaklukkan soal di ${currentSession.failedPosCode} setelah ${settings.maxAttempts} kali percobaan.`;
     }
 
     localStorage.setItem(LOCAL_SESSION_KEY, JSON.stringify(currentSession));

@@ -336,8 +336,7 @@ async function startServer() {
       return res.json({
         success: true,
         matched: true,
-        message: `🎉 KODE DITEMUKAN!\nSelamat! Kamu tiba di ${targetLoc?.name || 'Pos Cerita'}.\nBacalah babak cerita dengan seksama dan selesaikan tantangan literasi!`,
-        stationName: targetLoc?.name,
+        message: `🎉 KODE DITEMUKAN!\nSelamat! Kamu berhasil menemukan ${targetLoc?.code || 'Pos ini'}.\nBacalah artikel materi dengan seksama, catat di buku tulismu, lalu selesaikan soal!`,
         story: targetLoc?.story,
         questions: stationQuestions,
         currentPosIndex: session.currentPosIndex,
@@ -466,8 +465,7 @@ async function startServer() {
       posProgress.failed = true;
       session.status = 'failed';
       session.failedPosCode = currentLocConfig?.code || `POS ${session.currentPosIndex + 1}`;
-      session.failedPosName = currentLocConfig?.name || '';
-      session.failedReason = `Gagal menaklukkan soal di ${session.failedPosCode}${session.failedPosName ? ` (${session.failedPosName})` : ''} setelah ${settings.maxAttempts} kali percobaan.`;
+      session.failedReason = `Gagal menaklukkan soal di ${session.failedPosCode} setelah ${settings.maxAttempts} kali percobaan.`;
     }
 
     return res.json({

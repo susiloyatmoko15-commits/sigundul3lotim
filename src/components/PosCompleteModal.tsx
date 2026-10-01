@@ -43,25 +43,19 @@ export const PosCompleteModal: React.FC<Props> = ({
           +100 Bonus Poin Babak & Catatan Jurnal Didapatkan! 🌟
         </p>
 
-        {/* Next Location Clue Box */}
+        {/* Next Location Clue Box (Description only) */}
         <div className="bg-gradient-to-br from-amber-50 to-orange-50 border-2 border-amber-300 rounded-2xl p-4 text-left shadow-inner mb-6">
           <div className="flex items-center gap-2 mb-2 text-amber-800 font-bold text-xs uppercase tracking-wider">
             <Compass className="w-4 h-4 text-amber-600 animate-spin-slow" />
-            <span>Petunjuk Menuju Babak Berikutnya ({nextStation.code}):</span>
+            <span>Deskripsi Lokasi Berikutnya ({nextStation.code}):</span>
           </div>
-
-          {nextStation.name && (
-            <div className="text-sm font-extrabold text-amber-950 mb-1">
-              📍 Lokasi Pos: {nextStation.name}
-            </div>
-          )}
 
           <div className="bg-white/90 p-3.5 rounded-xl border border-amber-200 text-slate-800 text-sm font-medium leading-relaxed italic shadow-2xs">
             &ldquo;{nextStation.hint}&rdquo;
           </div>
 
           <p className="text-[11px] text-slate-500 mt-2 text-center">
-            Pergilah ke lokasi tersebut dan cari QR Code babak cerita berikutnya!
+            Temukan tempat yang sesuai dengan deskripsi di atas dan scan QR Code pos berikutnya!
           </p>
         </div>
 

@@ -19,14 +19,14 @@ export const HowToPlayModal: React.FC<Props> = ({ isOpen, onClose }) => {
     },
     {
       step: '2',
-      title: 'Ikuti Rute 5 Pos di Lingkungan Sekolah',
-      desc: 'Pos 1 di Gudang Sekolah ➔ Pos 2 di Bawah Pohon Jambu ➔ Pos 3 di Bawah Pohon Cempaka ➔ Pos 4 di Lorong Parkir ➔ Pos 5 (Final) di Kelas.',
+      title: 'Pecahkan Deskripsi Petunjuk Lokasi (Pos 1 – Pos 5)',
+      desc: 'Setiap pos memberikan deskripsi ciri-ciri tempat di lingkungan sekolah. Tebak lokasinya berdasarkan deskripsi tersebut secara berurutan dari Pos 1 hingga Pos 5!',
       icon: '🧭',
     },
     {
       step: '3',
       title: 'Cari & Scan QR Code di Setiap Pos',
-      desc: 'Temukan kartu QR Code di lokasi pos tersebut, lalu pindai menggunakan kamera smartphone untuk membuka artikel materi Perkembangbiakan Tumbuhan.',
+      desc: 'Temukan kartu QR Code di lokasi yang sesuai dengan deskripsi, lalu pindai menggunakan kamera smartphone untuk membuka artikel materi Perkembangbiakan Tumbuhan.',
       icon: '📷',
     },
     {
@@ -43,8 +43,8 @@ export const HowToPlayModal: React.FC<Props> = ({ isOpen, onClose }) => {
     },
     {
       step: '6',
-      title: 'Pos 5 di Kelas: Tunjukkan Buku Catatan ke Guru!',
-      desc: 'Selesaikan soal terakhir di Kelas untuk membuka Peti Harta Karun Ilmu & Piagam Penghargaan, lalu kumpulkan buku catatanmu kepada Bapak/Ibu Guru!',
+      title: 'Pos 5 (Final): Tunjukkan Buku Catatan ke Guru!',
+      desc: 'Selesaikan soal terakhir di Pos 5 untuk membuka Peti Harta Karun Ilmu & Piagam Penghargaan, lalu kumpulkan buku catatanmu kepada Bapak/Ibu Guru!',
       icon: '🏆',
     },
   ];

@@ -176,7 +176,7 @@ export const QuestionView: React.FC<Props> = ({
           title: canRetry ? '🤔 JAWABAN BELUM TEPAT' : `🚨 KELOMPOK GAGAL DI ${stationCode}!`,
           message: canRetry
             ? `Coba periksa kembali catatan di buku tulismu! Sisa kesempatan: ${attemptsLeft} kali lagi.`
-            : `Kesempatan menjawab (${maxAttempts}x) telah habis. Kelompok dinyatakan GAGAL pada ${stationCode}${stationName ? ` (${stationName})` : ''}. Untuk mereset dan mengulang aplikasi, hanya bisa dilakukan oleh Guru pada Panel Guru.`,
+            : `Kesempatan menjawab (${maxAttempts}x) telah habis. Kelompok dinyatakan GAGAL pada ${stationCode}. Untuk mereset dan mengulang aplikasi, hanya bisa dilakukan oleh Guru pada Panel Guru.`,
           explanation: !canRetry ? res.explanation : undefined,
           canRetry,
           attemptsLeft,
@@ -253,7 +253,7 @@ export const QuestionView: React.FC<Props> = ({
             Aplikasi Terkunci Sementara
           </h3>
           <p className="text-xs sm:text-sm text-slate-600 font-medium leading-relaxed max-w-md mx-auto">
-            Kelompokmu kehabisan kesempatan menjawab soal pada <strong>{stationCode}{stationName ? ` (${stationName})` : ''}</strong>. Siswa <strong>tidak dapat mengulang atau mereset aplikasi sendiri</strong>.
+            Kelompokmu kehabisan kesempatan menjawab soal pada <strong>{stationCode}</strong>. Siswa <strong>tidak dapat mengulang atau mereset aplikasi sendiri</strong>.
           </p>
         </div>
 
@@ -385,7 +385,7 @@ export const QuestionView: React.FC<Props> = ({
           </div>
           <div className="min-w-0">
             <div className="text-[10px] sm:text-xs font-black uppercase text-amber-800 tracking-wider leading-tight truncate">
-              {stationCode} {stationName ? `• ${stationName}` : ''}
+              {stationCode}
             </div>
             <div className="text-xs sm:text-sm font-bold text-slate-800 leading-tight">
               Soal Materi {questionIndex + 1} dari {totalQuestions}
