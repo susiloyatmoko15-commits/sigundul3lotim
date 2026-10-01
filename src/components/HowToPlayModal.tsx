@@ -19,8 +19,8 @@ export const HowToPlayModal: React.FC<Props> = ({ isOpen, onClose }) => {
     },
     {
       step: '2',
-      title: 'Pecahkan Deskripsi Petunjuk Lokasi (Pos 1 – Pos 5)',
-      desc: 'Setiap pos memberikan deskripsi ciri-ciri tempat di lingkungan sekolah. Tebak lokasinya berdasarkan deskripsi tersebut secara berurutan dari Pos 1 hingga Pos 5!',
+      title: 'Rute Pos 1–4 Diacak di Setiap Perangkat',
+      desc: 'Urutan Pos 1 sampai Pos 4 diacak otomatis untuk setiap perangkat/kelompok (agar tidak saling membuntuti), sedangkan Pos 5 tetap menjadi Pos Final di akhir. Tebak lokasi tujuanmu berdasarkan deskripsi ciri-ciri tempat di layar!',
       icon: '🧭',
     },
     {

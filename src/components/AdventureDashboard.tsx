@@ -152,7 +152,7 @@ export const AdventureDashboard: React.FC<Props> = ({
           <div className="flex items-center justify-center sm:justify-start gap-1.5 px-2.5 py-1.5 bg-emerald-50 border border-emerald-200 rounded-xl">
             <BookOpen className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-600 shrink-0" />
             <div>
-              <div className="text-[9px] font-bold text-emerald-800 uppercase leading-none">Babak</div>
+              <div className="text-[9px] font-bold text-emerald-800 uppercase leading-none">Tahap</div>
               <div className="text-xs sm:text-sm font-black text-emerald-950 tabular-nums leading-tight">
                 {session.currentPosIndex + 1}/{session.route.length}
               </div>
@@ -190,12 +190,14 @@ export const AdventureDashboard: React.FC<Props> = ({
         </div>
       </div>
 
-      {/* Serial Route Progression Bar (Babak 1 to Babak 5) */}
+      {/* Randomized Route Progression Bar (Pos 1-4 Randomized, Pos 5 Final) */}
       <div className="bg-white/90 rounded-2xl p-2.5 sm:p-3 border-2 border-amber-200 shadow-xs">
         <div className="text-[11px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center justify-between gap-2">
-          <span className="truncate">Alur Babak Cerita</span>
+          <span className="truncate">Rute Pos Kelompok (Pos 1–4 Acak)</span>
           <span className="text-[11px] text-amber-700 font-extrabold shrink-0">
-            {session.currentPosIndex === 4 ? 'Babak 5: Puncak Misteri' : `Menuju Babak ${session.currentPosIndex + 1}`}
+            {session.currentPosIndex === 4
+              ? 'Tahap 5: Pos 5 (Final)'
+              : `Tahap ${session.currentPosIndex + 1}/5: Cari ${currentStation.code}`}
           </span>
         </div>
 
@@ -204,6 +206,8 @@ export const AdventureDashboard: React.FC<Props> = ({
             const isCompleted = idx < session.currentPosIndex;
             const isCurrent = idx === session.currentPosIndex;
             const isFinalPos = idx === 4;
+            const locObj = locations.find(l => l.id === locId);
+            const revealedCode = locObj?.code ? locObj.code.replace(' (FINAL)', '') : `Pos ${idx + 1}`;
 
             let statusClass = 'bg-slate-100 border-slate-300 text-slate-400';
             if (isCompleted) {
@@ -228,11 +232,19 @@ export const AdventureDashboard: React.FC<Props> = ({
                     <Lock className="w-3.5 h-3.5" />
                   )}
                   <span className="hidden sm:inline">
-                    {isFinalPos ? 'Babak 5' : `Babak ${idx + 1}`}
+                    {isFinalPos
+                      ? 'Pos 5 (Final)'
+                      : isCompleted || isCurrent
+                      ? revealedCode
+                      : `Tahap ${idx + 1}`}
                   </span>
                 </div>
                 <span className="text-[10px] sm:hidden font-bold mt-0.5">
-                  {isFinalPos ? 'Pos 5' : `Pos ${idx + 1}`}
+                  {isFinalPos
+                    ? 'Pos 5'
+                    : isCompleted || isCurrent
+                    ? revealedCode
+                    : `Acak ${idx + 1}`}
                 </span>
               </div>
             );
@@ -249,7 +261,7 @@ export const AdventureDashboard: React.FC<Props> = ({
                 <span className="p-2 sm:p-2.5 bg-white/20 rounded-2xl text-xl sm:text-2xl shrink-0">🧭</span>
                 <div>
                   <span className="text-[11px] sm:text-xs font-black uppercase tracking-wider text-amber-200 block">
-                    MISI POS LITERASI #{currentStation.posNumber}
+                    TUJUAN KE-{currentStation.posNumber} DARI {currentStation.totalPos} &bull; CARI {currentStation.code}
                   </span>
                   <h3 className="text-lg sm:text-2xl font-black font-display tracking-wide leading-tight">
                     {currentLocConfig?.story?.title || currentStation.code}

@@ -165,9 +165,14 @@ async function startServer() {
       return res.status(500).json({ success: false, error: 'Tidak ada pos cerita aktif.' });
     }
 
-    // Sort locations by chapter number 1 to 5 (Serial Episodic Story)
-    const sortedLocs = [...activeLocs].sort((a, b) => a.story.chapterNumber - b.story.chapterNumber);
-    const route = sortedLocs.map(l => l.id);
+    // Randomize Pos 1 to Pos 4 per device/group, keeping Pos 5 fixed as the Final Pos
+    const nonFinalLocs = shuffleArray(
+      activeLocs.filter(l => !l.isFinal)
+    );
+    const finalLocs = activeLocs
+      .filter(l => l.isFinal)
+      .sort((a, b) => a.story.chapterNumber - b.story.chapterNumber);
+    const route = [...nonFinalLocs, ...finalLocs].map(l => l.id);
 
     const gameId = `LITERASI-${Date.now().toString().slice(-6)}-${Math.floor(100 + Math.random() * 900)}`;
 
@@ -299,7 +304,7 @@ async function startServer() {
     return res.json({
       success: true,
       matched: false,
-      message: '🔒 KODE BELUM BISA DIBUKA\nKode ini bukan babak cerita tujuanmu saat ini.\nIkuti petunjuk babak secara berurutan.',
+      message: '🔒 KODE BELUM BISA DIBUKA\nKode QR ini bukan tujuan pos perangkatmu saat ini.\nTemukan pos yang sesuai dengan deskripsi petunjuk lokasi di layarmu!',
     });
   });
 

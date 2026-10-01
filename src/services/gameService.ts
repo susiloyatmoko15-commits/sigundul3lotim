@@ -16,7 +16,7 @@ import {
 
 const LOCAL_SESSION_KEY = 'sigundul_tumbuhan_v4_session';
 const LOCAL_SETTINGS_KEY = 'sigundul_tumbuhan_v4_settings';
-const LOCAL_LOCATIONS_KEY = 'sigundul_tumbuhan_v4_locations';
+const LOCAL_LOCATIONS_KEY = 'sigundul_tumbuhan_v5_locations';
 const LOCAL_QUESTIONS_KEY = 'sigundul_tumbuhan_v4_questions';
 const LOCAL_LEADERBOARD_KEY = 'sigundul_tumbuhan_v5_leaderboard';
 
@@ -253,10 +253,15 @@ class GameService {
     const locations = await this.getLocations();
     const settings = await this.getSettings();
 
-    // Sort locations by chapter number 1 to 5
+    // Randomize Pos 1 to Pos 4 per device/group, keeping Pos 5 fixed as the Final Pos
     const activeLocs = locations.filter(l => l.isActive);
-    const sortedLocs = [...activeLocs].sort((a, b) => a.story.chapterNumber - b.story.chapterNumber);
-    const route = sortedLocs.map(l => l.id);
+    const nonFinalLocs = shuffleArray(
+      activeLocs.filter(l => !l.isFinal)
+    );
+    const finalLocs = activeLocs
+      .filter(l => l.isFinal)
+      .sort((a, b) => a.story.chapterNumber - b.story.chapterNumber);
+    const route = [...nonFinalLocs, ...finalLocs].map(l => l.id);
 
     const gameId = `LITERASI-${Date.now().toString().slice(-6)}-${Math.floor(100 + Math.random() * 900)}`;
     const posProgress: GameSession['posProgress'] = {};

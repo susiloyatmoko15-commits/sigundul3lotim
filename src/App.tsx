@@ -19,6 +19,7 @@ import { LeaderboardView } from './components/LeaderboardView';
 import { AdminDashboard } from './components/AdminDashboard';
 import { HowToPlayModal } from './components/HowToPlayModal';
 import { SplashScreen } from './components/SplashScreen';
+import { ScreenLockGuard } from './components/ScreenLockGuard';
 
 import {
   GameSession,
@@ -152,6 +153,20 @@ export default function App() {
   // Start new game
   const handleStartGame = async (player: PlayerInfo) => {
     try {
+      // Request fullscreen immediately on user gesture so phone screen locks
+      try {
+        const el = document.documentElement as any;
+        if (!document.fullscreenElement) {
+          if (el.requestFullscreen) {
+            await el.requestFullscreen({ navigationUI: 'hide' });
+          } else if (el.webkitRequestFullscreen) {
+            await el.webkitRequestFullscreen();
+          }
+        }
+      } catch {
+        // ignore if unsupported
+      }
+
       // Clear any previous Pos article locks so new session starts fresh
       ['pos_1', 'pos_2', 'pos_3', 'pos_4', 'pos_5'].forEach((id) => {
         localStorage.removeItem(`sigundul_article_locked_${id}`);
@@ -170,8 +185,42 @@ export default function App() {
   };
 
   // Resume active session
-  const handleResumeSession = () => {
+  const handleResumeSession = async () => {
+    try {
+      const el = document.documentElement as any;
+      if (!document.fullscreenElement) {
+        if (el.requestFullscreen) {
+          await el.requestFullscreen({ navigationUI: 'hide' });
+        } else if (el.webkitRequestFullscreen) {
+          await el.webkitRequestFullscreen();
+        }
+      }
+    } catch {
+      // ignore
+    }
     setView('adventure');
+  };
+
+  // Trigger screen lock when student leaves app / opens browser / exits fullscreen
+  const handleLockTriggered = useCallback(
+    async (reason: string) => {
+      if (!session || session.status !== 'active') return;
+      const updated = await gameService.lockScreen(session.gameId, reason, session);
+      setSession(updated);
+    },
+    [session]
+  );
+
+  // Unlock screen display ONLY by Teacher
+  const handleUnlockScreenByTeacher = async (code: string) => {
+    const res = await gameService.unlockScreenByTeacher(code, session);
+    if (res.success && res.session) {
+      setSession(res.session);
+    }
+    return {
+      success: res.success,
+      message: res.message,
+    };
   };
 
   // Verify scanned QR Code
@@ -371,17 +420,40 @@ export default function App() {
     currentStation?.story ||
     locations.find((l) => l.id === currentLocId)?.story;
 
+  const isAdventureLocked = view === 'adventure' && session?.status === 'active';
+
   return (
     <div className="min-h-screen flex flex-col bg-amber-50/50">
       {/* Fullscreen Initial Splash Screen */}
       {showSplash && <SplashScreen onEnter={() => setShowSplash(false)} />}
 
+      {/* Anti-Cheat Screen Lock & Fullscreen Guard */}
+      <ScreenLockGuard
+        isActiveAdventure={isAdventureLocked}
+        isScannerOpen={isScannerOpen}
+        session={session}
+        currentPosCode={currentStation?.code}
+        onLockTriggered={handleLockTriggered}
+        onUnlockByTeacher={handleUnlockScreenByTeacher}
+        onResetByTeacher={handleResetSessionByTeacher}
+      />
+
       {/* Top Navigation */}
       <Navbar
-        onGoHome={() => setView('home')}
-        onOpenLeaderboard={() => setView('leaderboard')}
+        onGoHome={() => {
+          if (isAdventureLocked) return;
+          setView('home');
+        }}
+        onOpenLeaderboard={() => {
+          if (isAdventureLocked) return;
+          setView('leaderboard');
+        }}
         onOpenAdmin={() => setView('admin')}
-        onShowSplash={() => setShowSplash(true)}
+        onShowSplash={() => {
+          if (isAdventureLocked) return;
+          setShowSplash(true);
+        }}
+        isAdventureLocked={isAdventureLocked}
       />
 
       {/* Main Content Area */}
@@ -484,9 +556,16 @@ export default function App() {
         {/* --- VIEW: TEACHER / ADMIN DASHBOARD --- */}
         {view === 'admin' && (
           <AdminDashboard
-            onBack={() => setView('home')}
+            onBack={() => {
+              if (session && session.status === 'active') {
+                setView('adventure');
+                return;
+              }
+              setView('home');
+            }}
             activeSession={session}
             onResetSessionByTeacher={handleResetSessionByTeacher}
+            onUnlockScreenByTeacher={handleUnlockScreenByTeacher}
           />
         )}
       </main>
