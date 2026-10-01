@@ -118,6 +118,9 @@ export interface GameSession {
   failedPosCode?: string;
   failedPosName?: string;
   failedReason?: string;
+  screenLocked?: boolean;
+  screenLockReason?: string;
+  screenLockCount?: number;
   treasureUnlocked: boolean;
   storyRetelling?: StoryRetelling;
 }

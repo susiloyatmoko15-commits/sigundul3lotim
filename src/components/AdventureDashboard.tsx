@@ -99,7 +99,17 @@ export const AdventureDashboard: React.FC<Props> = ({
   const currentLocConfig = locations.find(l => l.id === currentLocId);
 
   return (
-    <div className="space-y-3 sm:space-y-4">
+    <div className="space-y-3 sm:space-y-4 select-none">
+      {/* Anti-Cheat Screen Lock Banner */}
+      <div className="bg-rose-600 text-white rounded-2xl px-3.5 py-2 shadow-sm border border-rose-400 flex items-center justify-between gap-2 text-[11px] sm:text-xs font-bold">
+        <div className="flex items-center gap-2">
+          <Lock className="w-4 h-4 text-yellow-300 shrink-0" />
+          <span>
+            <strong>MODE KUNCI LAYAR HP AKTIF:</strong> Dilarang membuka browser / keluar aplikasi. Jika keluar layar, tampilan terkunci &amp; hanya Guru yang bisa membukanya!
+          </span>
+        </div>
+      </div>
+
       {/* Top Floating Dashboard Bar (Smartphone-optimized) */}
       <div className="bg-white/95 backdrop-blur-md rounded-2xl sm:rounded-3xl p-3 sm:p-4 shadow-md border-2 sm:border-3 border-amber-300 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3">
         {/* Player Name, Class & Help */}

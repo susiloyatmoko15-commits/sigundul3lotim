@@ -510,6 +510,48 @@ async function startServer() {
     });
   });
 
+  // Lock screen when student exits fullscreen or switches browser tab/app
+  app.post('/api/game/lock-screen', (req: Request, res: Response) => {
+    const { gameId, reason } = req.body;
+    if (gameId && activeGames.has(gameId)) {
+      const s = activeGames.get(gameId)!;
+      s.screenLocked = true;
+      s.screenLockReason =
+        reason || 'Terdeteksi keluar dari layar aplikasi atau membuka browser saat petualangan.';
+      s.screenLockCount = (s.screenLockCount || 0) + 1;
+      return res.json({
+        success: true,
+        screenLocked: true,
+        screenLockReason: s.screenLockReason,
+        screenLockCount: s.screenLockCount,
+      });
+    }
+    return res.json({ success: true, screenLocked: true });
+  });
+
+  // Unlock screen display ONLY by Teacher
+  app.post('/api/game/unlock-screen', (req: Request, res: Response) => {
+    const { gameId, code } = req.body;
+    const cleanCode = (code || '').trim().toLowerCase();
+    if (!['buka', 'ulangi', 'guru', '1234', 'admin'].includes(cleanCode)) {
+      return res.status(403).json({
+        success: false,
+        message: 'Kode / PIN Guru salah! Hanya Bapak/Ibu Guru yang dapat membuka kuncian tampilan.',
+      });
+    }
+
+    if (gameId && activeGames.has(gameId)) {
+      const s = activeGames.get(gameId)!;
+      s.screenLocked = false;
+      s.screenLockReason = undefined;
+    }
+
+    return res.json({
+      success: true,
+      message: 'Kuncian tampilan berhasil dibuka oleh Guru! Siswa dapat melanjutkan petualangan.',
+    });
+  });
+
   // ----------------------------------------------------
   // VITE DEV SERVER INTEGRATION
   // ----------------------------------------------------

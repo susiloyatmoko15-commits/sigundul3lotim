@@ -39,12 +39,14 @@ interface Props {
   onBack: () => void;
   activeSession?: GameSession | null;
   onResetSessionByTeacher: (code: string) => Promise<{ success: boolean; message: string }>;
+  onUnlockScreenByTeacher?: (code: string) => Promise<{ success: boolean; message: string }>;
 }
 
 export const AdminDashboard: React.FC<Props> = ({
   onBack,
   activeSession,
   onResetSessionByTeacher,
+  onUnlockScreenByTeacher,
 }) => {
   // Simple PIN guard for teacher
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -113,6 +115,38 @@ export const AdminDashboard: React.FC<Props> = ({
     };
     load();
   }, []);
+
+  const handleTeacherUnlockScreen = async () => {
+    if (!onUnlockScreenByTeacher) return;
+    if (!resetCodeInput.trim()) {
+      sounds.playWrong();
+      setResetFeedback({
+        type: 'error',
+        message: 'Harap masukkan Kode / PIN Guru terlebih dahulu!',
+      });
+      return;
+    }
+
+    setIsResetting(true);
+    setResetFeedback(null);
+    const res = await onUnlockScreenByTeacher(resetCodeInput);
+    setIsResetting(false);
+
+    if (res.success) {
+      sounds.playSuccess();
+      setResetCodeInput('');
+      setResetFeedback({
+        type: 'success',
+        message: res.message,
+      });
+    } else {
+      sounds.playWrong();
+      setResetFeedback({
+        type: 'error',
+        message: res.message,
+      });
+    }
+  };
 
   const handleTeacherResetApp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -416,14 +450,25 @@ export const AdminDashboard: React.FC<Props> = ({
               </div>
             )}
 
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               <button
                 type="button"
                 onClick={onBack}
                 className="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-2xl text-xs cursor-pointer"
               >
-                Kembali ke Beranda
+                Kembali
               </button>
+              {activeSession?.screenLocked && onUnlockScreenByTeacher && (
+                <button
+                  type="button"
+                  disabled={isResetting}
+                  onClick={handleTeacherUnlockScreen}
+                  className="flex-1 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-black rounded-2xl text-xs shadow-md cursor-pointer flex items-center justify-center gap-1.5"
+                >
+                  <Key className="w-3.5 h-3.5" />
+                  <span>Buka Kuncian Tampilan</span>
+                </button>
+              )}
               <button
                 type="submit"
                 disabled={isResetting}
