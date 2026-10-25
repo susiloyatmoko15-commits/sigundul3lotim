@@ -16,7 +16,7 @@ import {
 
 const LOCAL_SESSION_KEY = 'sigundul_tumbuhan_v4_session';
 const LOCAL_SETTINGS_KEY = 'sigundul_tumbuhan_v4_settings';
-const LOCAL_LOCATIONS_KEY = 'sigundul_tumbuhan_v5_locations';
+const LOCAL_LOCATIONS_KEY = 'sigundul_tumbuhan_v6_locations';
 const LOCAL_QUESTIONS_KEY = 'sigundul_tumbuhan_v4_questions';
 const LOCAL_LEADERBOARD_KEY = 'sigundul_tumbuhan_v5_leaderboard';
 
@@ -28,6 +28,19 @@ function shuffleArray<T>(array: T[]): T[] {
     [arr[i], arr[j]] = [arr[j], arr[i]];
   }
   return arr;
+}
+
+// Guarantee Pos 1 to 4 are shuffled per group/device, avoiding sequential identity
+function shufflePos1To4(nonFinalLocs: LocationConfig[]): LocationConfig[] {
+  if (nonFinalLocs.length <= 1) return nonFinalLocs;
+  let shuffled = shuffleArray(nonFinalLocs);
+  let attempts = 0;
+  // If random shuffle by chance produced identical sequential order, reshuffle so it is truly randomized
+  while (attempts < 10 && shuffled.every((loc, i) => loc.id === nonFinalLocs[i].id)) {
+    shuffled = shuffleArray(nonFinalLocs);
+    attempts++;
+  }
+  return shuffled;
 }
 
 // Client Question Sanitizer
@@ -255,7 +268,7 @@ class GameService {
 
     // Randomize Pos 1 to Pos 4 per device/group, keeping Pos 5 fixed as the Final Pos
     const activeLocs = locations.filter(l => l.isActive);
-    const nonFinalLocs = shuffleArray(
+    const nonFinalLocs = shufflePos1To4(
       activeLocs.filter(l => !l.isFinal)
     );
     const finalLocs = activeLocs
@@ -317,6 +330,7 @@ class GameService {
     stationName?: string;
     story?: any;
     questions?: ClientQuestion[];
+    session?: GameSession;
   }> {
     try {
       const res = await fetch(`/api/game/${gameId}/verify-qr`, {
@@ -330,6 +344,7 @@ class GameService {
           const currentLocId = currentSession.route[currentSession.currentPosIndex];
           currentSession.posProgress[currentLocId].qrVerified = true;
           localStorage.setItem(LOCAL_SESSION_KEY, JSON.stringify(currentSession));
+          data.session = data.session || currentSession;
         }
         return data;
       }
@@ -360,12 +375,13 @@ class GameService {
         message: `🎉 KODE DITEMUKAN!\nSelamat! Kamu berhasil menemukan ${targetLoc?.code || 'Pos ini'}.\nBacalah artikel materi dengan seksama, catat di buku tulismu, lalu selesaikan soal!`,
         story: targetLoc?.story,
         questions: stationQ,
+        session: currentSession,
       };
     }
 
     return {
       matched: false,
-      message: '🔒 KODE BELUM BISA DIBUKA\nKode ini bukan babak cerita tujuanmu saat ini.\nIkuti petunjuk babak secara berurutan.',
+      message: `🔒 KODE BELUM BISA DIBUKA\nKartu QR Code ini bukan pos tujuanmu saat ini.\nCari pos yang sesuai dengan petunjuk lokasi di layarmu: ${targetLoc?.code || 'Pos Tujuan'}!`,
     };
   }
 
@@ -392,6 +408,7 @@ class GameService {
     treasureCode?: string;
     teacherMessage?: string;
     summary?: LeaderboardEntry;
+    session?: GameSession;
   }> {
     try {
       const res = await fetch(`/api/game/${gameId}/submit-answer`, {
@@ -405,6 +422,9 @@ class GameService {
         if (data.score !== undefined) {
           currentSession.score = data.score;
         }
+        if (data.nextStation) {
+          currentSession.currentPosIndex = data.nextStation.posNumber - 1;
+        }
         if (data.posFailed) {
           const currentLocId = currentSession.route[currentSession.currentPosIndex];
           if (currentSession.posProgress[currentLocId]) {
@@ -415,7 +435,12 @@ class GameService {
           currentSession.failedPosName = data.failedPosName;
           currentSession.failedReason = data.failedReason;
         }
+        if (data.session) {
+          localStorage.setItem(LOCAL_SESSION_KEY, JSON.stringify(data.session));
+          return data;
+        }
         localStorage.setItem(LOCAL_SESSION_KEY, JSON.stringify(currentSession));
+        data.session = currentSession;
         return data;
       }
     } catch {
@@ -477,6 +502,7 @@ class GameService {
             allCompleted: true,
             needsRetelling: true,
             score: currentSession.score,
+            session: currentSession,
             treasureCode: settings.treasureCode,
             teacherMessage: settings.teacherMessage,
           };
@@ -496,6 +522,7 @@ class GameService {
           posCompleted: true,
           allCompleted: false,
           score: currentSession.score,
+          session: currentSession,
           nextStation: {
             posNumber: nextIndex + 1,
             totalPos: currentSession.route.length,
@@ -518,6 +545,7 @@ class GameService {
         explanation: q.explanation,
         posCompleted: false,
         score: currentSession.score,
+        session: currentSession,
       };
     }
 

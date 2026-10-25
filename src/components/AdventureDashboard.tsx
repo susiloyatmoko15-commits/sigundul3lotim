@@ -93,10 +93,16 @@ export const AdventureDashboard: React.FC<Props> = ({
     return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
   };
 
-  const currentLocId = session.route[session.currentPosIndex];
+  const currentLocId = session.route[session.currentPosIndex] || currentStation.id;
   const currentPosProgress = session.posProgress[currentLocId];
   const isQrVerified = currentPosProgress?.qrVerified || false;
-  const currentLocConfig = locations.find(l => l.id === currentLocId);
+  const currentLocConfig =
+    locations.find((l) => l.id === currentLocId) ||
+    locations.find((l) => l.id === currentStation.id);
+  const activeStationCode =
+    currentStation.code || currentLocConfig?.code || `POS ${session.currentPosIndex + 1}`;
+  const activeStationHint = currentStation.hint || currentLocConfig?.hint || '';
+  const activeStationName = currentStation.name || currentLocConfig?.name;
 
   return (
     <div className="space-y-3 sm:space-y-4">
@@ -193,11 +199,11 @@ export const AdventureDashboard: React.FC<Props> = ({
       {/* Randomized Route Progression Bar (Pos 1-4 Randomized, Pos 5 Final) */}
       <div className="bg-white/90 rounded-2xl p-2.5 sm:p-3 border-2 border-amber-200 shadow-xs">
         <div className="text-[11px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center justify-between gap-2">
-          <span className="truncate">Rute Pos Kelompok (Pos 1–4 Acak)</span>
+          <span className="truncate">Rute Pos Kelompok (Pos 1–4 Diacak)</span>
           <span className="text-[11px] text-amber-700 font-extrabold shrink-0">
             {session.currentPosIndex === 4
-              ? 'Tahap 5: Pos 5 (Final)'
-              : `Tahap ${session.currentPosIndex + 1}/5: Cari ${currentStation.code}`}
+              ? 'Tujuan Ke-5: Pos 5 (Final)'
+              : `Tujuan Ke-${session.currentPosIndex + 1}/5: Cari ${activeStationCode}`}
           </span>
         </div>
 
@@ -206,8 +212,8 @@ export const AdventureDashboard: React.FC<Props> = ({
             const isCompleted = idx < session.currentPosIndex;
             const isCurrent = idx === session.currentPosIndex;
             const isFinalPos = idx === 4;
-            const locObj = locations.find(l => l.id === locId);
-            const revealedCode = locObj?.code ? locObj.code.replace(' (FINAL)', '') : `Pos ${idx + 1}`;
+            const locObj = locations.find((l) => l.id === locId);
+            const posCode = locObj?.code ? locObj.code.replace(' (FINAL)', '') : `Pos ${idx + 1}`;
 
             let statusClass = 'bg-slate-100 border-slate-300 text-slate-400';
             if (isCompleted) {
@@ -231,20 +237,16 @@ export const AdventureDashboard: React.FC<Props> = ({
                   ) : (
                     <Lock className="w-3.5 h-3.5" />
                   )}
-                  <span className="hidden sm:inline">
+                  <span className="text-[11px] font-black">
                     {isFinalPos
-                      ? 'Pos 5 (Final)'
+                      ? 'Pos 5'
                       : isCompleted || isCurrent
-                      ? revealedCode
-                      : `Tahap ${idx + 1}`}
+                      ? posCode
+                      : `Tujuan ${idx + 1}`}
                   </span>
                 </div>
-                <span className="text-[10px] sm:hidden font-bold mt-0.5">
-                  {isFinalPos
-                    ? 'Pos 5'
-                    : isCompleted || isCurrent
-                    ? revealedCode
-                    : `Acak ${idx + 1}`}
+                <span className="text-[9px] font-medium opacity-85">
+                  {isCurrent ? 'Sedang Dicari' : isCompleted ? 'Selesai' : `Rute ${idx + 1}`}
                 </span>
               </div>
             );
@@ -261,11 +263,16 @@ export const AdventureDashboard: React.FC<Props> = ({
                 <span className="p-2 sm:p-2.5 bg-white/20 rounded-2xl text-xl sm:text-2xl shrink-0">🧭</span>
                 <div>
                   <span className="text-[11px] sm:text-xs font-black uppercase tracking-wider text-amber-200 block">
-                    TUJUAN KE-{currentStation.posNumber} DARI {currentStation.totalPos} &bull; CARI {currentStation.code}
+                    TUJUAN KE-{session.currentPosIndex + 1} DARI {session.route.length} &bull; CARI {activeStationCode}
                   </span>
                   <h3 className="text-lg sm:text-2xl font-black font-display tracking-wide leading-tight">
-                    {currentLocConfig?.story?.title || currentStation.code}
+                    Misi: Temukan {activeStationCode} {currentStation.isFinal ? '(Pos Final)' : ''}
                   </h3>
+                  {settings.hintMode === 'easy' && activeStationName && (
+                    <span className="text-xs font-bold text-amber-100 block mt-0.5">
+                      📍 Lokasi: {activeStationName}
+                    </span>
+                  )}
                 </div>
               </div>
 
@@ -276,21 +283,21 @@ export const AdventureDashboard: React.FC<Props> = ({
               )}
             </div>
 
-            {/* Clue/Riddle Box (Only description shown, no specific location name) */}
+            {/* Clue/Riddle Box (Description matching activeStationCode) */}
             <div className="bg-white/95 text-slate-800 rounded-2xl p-3.5 sm:p-4 shadow-inner space-y-2 border-2 border-amber-300">
               <div className="flex items-center gap-1.5 text-xs font-bold text-amber-800 uppercase tracking-wider">
                 <Compass className="w-4 h-4 text-amber-600 shrink-0" />
-                <span>Deskripsi Petunjuk Lokasi {currentStation.code}:</span>
+                <span>Deskripsi Petunjuk Lokasi {activeStationCode}:</span>
               </div>
 
               <p className="text-xs sm:text-sm font-semibold text-slate-800 leading-relaxed italic bg-amber-50/70 p-3 rounded-xl border border-amber-200">
-                &ldquo;{currentStation.hint}&rdquo;
+                &ldquo;{activeStationHint}&rdquo;
               </p>
 
               <div className="text-[11px] sm:text-xs text-slate-500 flex items-start gap-1.5 pt-0.5">
                 <AlertCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
                 <span>
-                  Temukan lokasi yang sesuai dengan deskripsi di atas, lalu scan kartu QR Code di tempat tersebut!
+                  Temukan lokasi yang sesuai dengan deskripsi di atas, lalu scan kartu <strong>{activeStationCode}</strong> di tempat tersebut!
                 </span>
               </div>
             </div>
@@ -304,7 +311,7 @@ export const AdventureDashboard: React.FC<Props> = ({
               className="w-full py-3.5 sm:py-4 bg-yellow-400 hover:bg-yellow-300 active:bg-yellow-500 text-amber-950 font-black text-base sm:text-lg rounded-2xl shadow-xl hover:shadow-2xl transition-all active:scale-98 flex items-center justify-center gap-2.5 uppercase tracking-wide font-display cursor-pointer"
             >
               <QrCode className="w-5 h-5 sm:w-6 sm:h-6 text-amber-950 shrink-0" />
-              <span>SCAN QR CODE {currentStation.code}</span>
+              <span>SCAN QR CODE {activeStationCode}</span>
             </button>
           </div>
 
@@ -318,7 +325,7 @@ export const AdventureDashboard: React.FC<Props> = ({
               className="w-full py-3.5 bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 text-amber-950 font-black text-sm rounded-2xl shadow-lg border-2 border-amber-600 flex items-center justify-center gap-2 uppercase tracking-wide font-display active:scale-98 cursor-pointer"
             >
               <QrCode className="w-5 h-5 text-amber-950 shrink-0" />
-              <span>SCAN QR CODE {currentStation.code}</span>
+              <span>SCAN QR CODE {activeStationCode}</span>
             </button>
           </div>
         </>

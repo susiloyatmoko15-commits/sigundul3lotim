@@ -185,7 +185,22 @@ export default function App() {
     if (res.matched && res.questions) {
       setCurrentStationQuestions(res.questions);
       const currentLocId = session.route[session.currentPosIndex];
-      const posProg = session.posProgress[currentLocId];
+
+      const updatedSession: GameSession = res.session || {
+        ...session,
+        posProgress: {
+          ...session.posProgress,
+          [currentLocId]: {
+            ...session.posProgress[currentLocId],
+            qrVerified: true,
+          },
+        },
+      };
+
+      setSession(updatedSession);
+      gameService.saveSession(updatedSession);
+
+      const posProg = updatedSession.posProgress[currentLocId];
       setCurrentQuestionIndex(posProg?.solvedQuestions.length || 0);
 
       if (res.story) {
@@ -224,11 +239,27 @@ export default function App() {
       };
       setSession(updatedSession);
       gameService.saveSession(updatedSession);
+    } else if (res.session) {
+      setSession(res.session);
+      gameService.saveSession(res.session);
     } else if (res.isCorrect && res.score !== undefined) {
-      setSession({
+      const currentLocId = session.route[session.currentPosIndex];
+      const updatedProgress = { ...session.posProgress[currentLocId] };
+      if (!updatedProgress.solvedQuestions.includes(currentQ.id)) {
+        updatedProgress.solvedQuestions = [...updatedProgress.solvedQuestions, currentQ.id];
+      }
+      const updatedSession: GameSession = {
         ...session,
         score: res.score,
-      });
+        totalCorrect: session.totalCorrect + 1,
+        totalAttempts: session.totalAttempts + 1,
+        posProgress: {
+          ...session.posProgress,
+          [currentLocId]: updatedProgress,
+        },
+      };
+      setSession(updatedSession);
+      gameService.saveSession(updatedSession);
     }
 
     return res;
@@ -285,6 +316,17 @@ export default function App() {
       });
       setCurrentStationQuestions([]);
       setCurrentQuestionIndex(0);
+
+      // Crucial: Update session.currentPosIndex in React state so all UI reflects the new Pos
+      if (session) {
+        const nextIndex = res.nextStation.posNumber - 1;
+        const updatedSession: GameSession = res.session || {
+          ...session,
+          currentPosIndex: nextIndex,
+        };
+        setSession(updatedSession);
+        gameService.saveSession(updatedSession);
+      }
 
       // If next is Final, queue the Final Intro Modal
       if (isNextFinal) {

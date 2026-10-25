@@ -39,6 +39,19 @@ function shuffleArray<T>(array: T[]): T[] {
   return arr;
 }
 
+// Guarantee Pos 1 to 4 are shuffled per group/device, avoiding sequential identity
+function shufflePos1To4(nonFinalLocs: LocationConfig[]): LocationConfig[] {
+  if (nonFinalLocs.length <= 1) return nonFinalLocs;
+  let shuffled = shuffleArray(nonFinalLocs);
+  let attempts = 0;
+  // If random shuffle by chance produced identical sequential order, reshuffle so it is truly randomized
+  while (attempts < 10 && shuffled.every((loc, i) => loc.id === nonFinalLocs[i].id)) {
+    shuffled = shuffleArray(nonFinalLocs);
+    attempts++;
+  }
+  return shuffled;
+}
+
 // Sanitize question for client (strips correctAnswer & explanation)
 function toClientQuestion(q: Question): ClientQuestion {
   const sanitized: ClientQuestion = {
@@ -166,7 +179,7 @@ async function startServer() {
     }
 
     // Randomize Pos 1 to Pos 4 per device/group, keeping Pos 5 fixed as the Final Pos
-    const nonFinalLocs = shuffleArray(
+    const nonFinalLocs = shufflePos1To4(
       activeLocs.filter(l => !l.isFinal)
     );
     const finalLocs = activeLocs
@@ -298,13 +311,14 @@ async function startServer() {
         story: targetLoc?.story,
         questions: stationQuestions,
         currentPosIndex: session.currentPosIndex,
+        session,
       });
     }
 
     return res.json({
       success: true,
       matched: false,
-      message: '🔒 KODE BELUM BISA DIBUKA\nKode QR ini bukan tujuan pos perangkatmu saat ini.\nTemukan pos yang sesuai dengan deskripsi petunjuk lokasi di layarmu!',
+      message: `🔒 KODE BELUM BISA DIBUKA\nKode QR ini bukan tujuan pos perangkatmu saat ini.\nTemukan pos yang sesuai dengan petunjuk lokasi di layarmu: ${targetLoc?.code || 'Pos ini'}!`,
     });
   });
 
@@ -373,6 +387,7 @@ async function startServer() {
             allCompleted: true,
             needsRetelling: true, // triggers story retelling view!
             score: session.score,
+            session,
             treasureCode: settings.treasureCode,
             teacherMessage: settings.teacherMessage,
           });
@@ -392,6 +407,7 @@ async function startServer() {
           posCompleted: true,
           allCompleted: false,
           score: session.score,
+          session,
           nextStation: {
             posNumber: nextIndex + 1,
             totalPos: session.route.length,
@@ -413,6 +429,7 @@ async function startServer() {
         explanation: q.explanation,
         posCompleted: false,
         score: session.score,
+        session,
       });
     }
 

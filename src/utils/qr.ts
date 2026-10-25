@@ -54,7 +54,7 @@ export function printQrCards(locations: LocationConfig[], qrDataUrls: Record<str
           <p class="hint-text">${loc.hint}</p>
         </div>
         <div class="footer">
-          <span>📜 Detektif Literasi - Misteri Pusaka Aksara Nusantara</span>
+          <span>🌿 Detektif Literasi Sains - Petualangan Perkembangbiakan Tumbuhan</span>
           <span>Tempel di: <strong>${loc.name}</strong></span>
         </div>
       </div>
