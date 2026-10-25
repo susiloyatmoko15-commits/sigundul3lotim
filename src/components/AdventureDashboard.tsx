@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Compass,
   Trophy,
-  Clock,
   MapPin,
   QrCode,
   Sparkles,
@@ -35,7 +34,7 @@ interface Props {
   questionsForCurrentPos: ClientQuestion[];
   onOpenScanner: () => void;
   onOpenHowToPlay: () => void;
-  onTimeout: () => void;
+  onTimeout?: () => void;
 }
 
 export const AdventureDashboard: React.FC<Props> = ({
@@ -48,49 +47,12 @@ export const AdventureDashboard: React.FC<Props> = ({
   onOpenHowToPlay,
   onTimeout,
 }) => {
-  const [secondsRemaining, setSecondsRemaining] = useState<number | null>(() => {
-    if (settings.durationMinutes <= 0) return null;
-    const elapsedSeconds = Math.floor((Date.now() - session.startTime) / 1000);
-    const totalSeconds = settings.durationMinutes * 60;
-    return Math.max(0, totalSeconds - elapsedSeconds);
-  });
-
   const [soundEnabled, setSoundEnabled] = useState(sounds.enabled);
-
-  // Timer countdown
-  useEffect(() => {
-    if (secondsRemaining === null) return;
-    if (secondsRemaining <= 0) {
-      onTimeout();
-      return;
-    }
-
-    const interval = setInterval(() => {
-      setSecondsRemaining((prev) => {
-        if (prev === null) return null;
-        if (prev <= 1) {
-          clearInterval(interval);
-          onTimeout();
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [secondsRemaining, onTimeout]);
 
   const toggleSound = () => {
     sounds.enabled = !sounds.enabled;
     setSoundEnabled(sounds.enabled);
     if (sounds.enabled) sounds.playClick();
-  };
-
-  const formatTimer = (totalSecs: number | null) => {
-    if (totalSecs === null) return '∞ Bebas';
-    const m = Math.floor(totalSecs / 60);
-    const s = totalSecs % 60;
-    return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
   };
 
   const currentLocId = session.route[session.currentPosIndex] || currentStation.id;
@@ -141,10 +103,10 @@ export const AdventureDashboard: React.FC<Props> = ({
           </button>
         </div>
 
-        {/* Stats Trio: Score, Pos, Timer (3 equal columns on smartphone) */}
-        <div className="grid grid-cols-3 sm:flex items-center gap-2 sm:gap-2.5">
+        {/* Stats Duo: Score & Pos Tracker (2 equal columns on smartphone, flex on desktop) */}
+        <div className="grid grid-cols-2 sm:flex items-center gap-2 sm:gap-2.5">
           {/* Score */}
-          <div className="flex items-center justify-center sm:justify-start gap-1.5 px-2.5 py-1.5 bg-amber-50 border border-amber-200 rounded-xl">
+          <div className="flex items-center justify-center sm:justify-start gap-1.5 px-3 py-1.5 bg-amber-50 border border-amber-200 rounded-xl">
             <Trophy className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-600 shrink-0" />
             <div>
               <div className="text-[9px] font-bold text-amber-800 uppercase leading-none">Skor</div>
@@ -155,29 +117,12 @@ export const AdventureDashboard: React.FC<Props> = ({
           </div>
 
           {/* Pos Tracker */}
-          <div className="flex items-center justify-center sm:justify-start gap-1.5 px-2.5 py-1.5 bg-emerald-50 border border-emerald-200 rounded-xl">
+          <div className="flex items-center justify-center sm:justify-start gap-1.5 px-3 py-1.5 bg-emerald-50 border border-emerald-200 rounded-xl">
             <BookOpen className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-600 shrink-0" />
             <div>
               <div className="text-[9px] font-bold text-emerald-800 uppercase leading-none">Tahap</div>
               <div className="text-xs sm:text-sm font-black text-emerald-950 tabular-nums leading-tight">
                 {session.currentPosIndex + 1}/{session.route.length}
-              </div>
-            </div>
-          </div>
-
-          {/* Timer */}
-          <div
-            className={`flex items-center justify-center sm:justify-start gap-1.5 px-2.5 py-1.5 rounded-xl border ${
-              secondsRemaining !== null && secondsRemaining < 300
-                ? 'bg-rose-50 border-rose-300 text-rose-700 animate-pulse'
-                : 'bg-blue-50 border-blue-200 text-blue-900'
-            }`}
-          >
-            <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-600 shrink-0" />
-            <div>
-              <div className="text-[9px] font-bold uppercase leading-none">Waktu</div>
-              <div className="text-xs sm:text-sm font-black font-mono tabular-nums leading-tight">
-                {formatTimer(secondsRemaining)}
               </div>
             </div>
           </div>

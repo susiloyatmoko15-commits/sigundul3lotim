@@ -180,7 +180,9 @@ export const AdminDashboard: React.FC<Props> = ({
     if (!settings) return;
     sounds.playClick();
     setSavingStatus('Menyimpan pengaturan...');
-    await gameService.updateSettings(settings);
+    const updated = { ...settings, durationMinutes: 0 };
+    await gameService.updateSettings(updated);
+    setSettings(updated);
     setSavingStatus('Pengaturan berhasil disimpan! ✅');
     setTimeout(() => setSavingStatus(null), 2500);
   };
@@ -1157,21 +1159,12 @@ export const AdminDashboard: React.FC<Props> = ({
         {activeTab === 'settings' && settings && (
           <form onSubmit={handleSaveSettings} className="space-y-5">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-              <div>
-                <label className="block font-bold text-amber-900 mb-1">
-                  Durasi Petualangan (Menit):
-                </label>
-                <input
-                  type="number"
-                  min={0}
-                  max={120}
-                  value={settings.durationMinutes}
-                  onChange={(e) =>
-                    setSettings({ ...settings, durationMinutes: parseInt(e.target.value, 10) || 0 })
-                  }
-                  className="w-full p-2.5 bg-slate-50 border border-amber-300 rounded-xl"
-                />
-                <p className="text-[10px] text-slate-500 mt-0.5">Isi 0 untuk waktu bebas tanpa batasan.</p>
+              <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center gap-2.5">
+                <span className="text-xl">⏱️</span>
+                <div>
+                  <div className="font-extrabold text-emerald-950 text-xs">Waktu Permainan: Tidak Terbatas</div>
+                  <p className="text-[10px] text-emerald-800 leading-tight">Waktu permainan bebas tanpa batasan agar siswa dapat fokus membaca artikel materi dan mencatat di buku tulis.</p>
+                </div>
               </div>
 
               <div>

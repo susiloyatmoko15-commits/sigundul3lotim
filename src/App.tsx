@@ -360,22 +360,6 @@ export default function App() {
     }
   };
 
-  const handleTimeout = useCallback(() => {
-    setIsTimedOut(true);
-    sounds.playWrong();
-    setSession((prev) => {
-      if (!prev) return null;
-      const updated: GameSession = {
-        ...prev,
-        status: 'failed',
-        failedPosCode: currentStation?.code || `POS ${prev.currentPosIndex + 1}`,
-        failedPosName: currentStation?.name,
-        failedReason: 'Waktu petualangan habis sebelum menyelesaikan seluruh pos.',
-      };
-      gameService.saveSession(updated);
-      return updated;
-    });
-  }, [currentStation]);
 
   // Reset session ONLY by Teacher in Panel Guru using code "ulangi"
   const handleResetSessionByTeacher = async (code: string) => {
@@ -468,7 +452,6 @@ export default function App() {
               questionsForCurrentPos={currentStationQuestions}
               onOpenScanner={() => setIsScannerOpen(true)}
               onOpenHowToPlay={() => setIsHowToPlayOpen(true)}
-              onTimeout={handleTimeout}
             />
 
             {/* Question Solving Area (Only if QR is verified) */}
